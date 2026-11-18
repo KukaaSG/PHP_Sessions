@@ -31,6 +31,7 @@ final class AuthController
 
         $user = (new UserModel())->findByEmail($email);
         if(password_verify($password,$user['hash'])){
+            Session::regenerar();
             Session::set('user_id',$user['id']);
 
             redirect('perfil');

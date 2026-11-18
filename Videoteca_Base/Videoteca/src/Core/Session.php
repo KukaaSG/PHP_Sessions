@@ -16,12 +16,22 @@ final class Session
             return;
         }
 
-        // TODO (Etapa 4, Exp. B): ini_set de use_strict_mode,
-        //      use_only_cookies y use_trans_sid
-        // TODO (Etapa 4, Exp. B): detectar HTTPS dinámicamente
-        //      $https = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
-        // TODO (Etapa 4, Exp. B): session_set_cookie_params([...])
-        //      con httponly, samesite y secure
+        $https = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+        
+        ini_set('session.use_strict_mode', '1');
+        ini_set('session.use_only_cookies', '1');
+        ini_set('session.use_trans_sid', '0');
+
+        session_name($https ? '__Host-SID' : 'SID');
+        session_set_cookie_params([
+            'lifetime' => 0,
+            'path' => '/',
+            'domain' => '',
+            'secure' => $https,
+            'httponly' => true,
+            'samesite' => 'Lax',
+        ]);
+
 
         session_start();
     }
@@ -72,7 +82,7 @@ final class Session
     // ---------- Etapa 4: regeneración del ID ----------
     public static function regenerar(): void
     {
-        // TODO: session_regenerate_id(true)
+        session_regenerate_id(true);
     }
 
     // ---------- Etapa 5: mensajes flash ----------
