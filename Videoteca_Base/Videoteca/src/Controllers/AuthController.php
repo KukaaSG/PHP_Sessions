@@ -17,7 +17,9 @@ final class AuthController
     // y pasadlos a la vista (la vista no accede a Session).
     public function showLogin(): void
     {
-        (new Pages())->render('auth/login', ['error' => null, 'info' => null]);
+        $error = Session::getFlash('error');
+        $info = Session::getFlash('info');
+        (new Pages())->render('auth/login', ['error' => $error, 'info' => $info]);
     }
 
     public function login(): void
@@ -38,6 +40,7 @@ final class AuthController
             exit();
         }
         else{
+            Session::setFlash('error','Correo o contraseña no validos');
             redirect('login');
             exit();
         }
@@ -50,6 +53,7 @@ final class AuthController
     {
         // TODO (Etapa 2): Session::destruir() y redirect('login')
         Session::destruir();
+        Session::setFlash('info','Ha cerrado la sesión');
         redirect('login');
         exit();
     }
