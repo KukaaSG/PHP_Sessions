@@ -53,6 +53,7 @@ final class AuthController
     {
         // TODO (Etapa 2): Session::destruir() y redirect('login')
         Session::destruir();
+        Session::iniciar();
         Session::setFlash('info','Ha cerrado la sesión');
         redirect('login');
         exit();

@@ -120,5 +120,22 @@ final class Session
         //       3) setFlash('error', 'Tu sesión ha caducado por inactividad')
         //       4) redirect('login');
         // TODO: si no caduca, actualizar 'ultima_actividad' con time()
+        if (!self::has('user_id')) {
+            return;
+        }
+
+        $ahora = time();
+        $ultimaActividad = $_SESSION['ultima_actividad'] ?? null;
+
+        if(is_int($ultimaActividad) && ($ahora - $ultimaActividad) > self::INACTIVIDAD_MAX){
+            self::destruir();
+            self::iniciar();
+            self::setFlash('error','Tu sesión ha caducado por inactividad');
+            redirect('login');
+            exit();
+        }
+        else{
+            $_SESSION['ultima_actividad'] = time();
+        }
     }
 }
